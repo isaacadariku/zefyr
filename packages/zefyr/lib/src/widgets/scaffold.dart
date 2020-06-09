@@ -5,8 +5,13 @@ import 'editor.dart';
 /// Provides necessary layout for [ZefyrEditor].
 class ZefyrScaffold extends StatefulWidget {
   final Widget child;
+  final bool showToolbar;
 
-  const ZefyrScaffold({Key key, this.child}) : super(key: key);
+  const ZefyrScaffold({
+    Key key,
+    this.child,
+    this.showToolbar = true,
+  }) : super(key: key);
 
   static ZefyrScaffoldState of(BuildContext context) {
     final widget =
@@ -39,15 +44,14 @@ class ZefyrScaffoldState extends State<ZefyrScaffold> {
   Widget build(BuildContext context) {
     final toolbar =
         (_toolbarBuilder == null) ? Container() : _toolbarBuilder(context);
-    return _ZefyrScaffoldAccess(
-      scaffold: this,
-      child: Column(
-        children: <Widget>[
-          Expanded(child: widget.child),
-          toolbar,
-        ],
-      ),
-    );
+
+    var child = widget.child;
+    if (widget.showToolbar) {
+      child = Column(
+        children: [Expanded(child: child), toolbar],
+      );
+    }
+    return _ZefyrScaffoldAccess(scaffold: this, child: child);
   }
 }
 
