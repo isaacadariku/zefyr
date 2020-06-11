@@ -20,12 +20,12 @@ class NotusHTMLCodec extends Codec<Delta, String> {
   Converter<Delta, String> get encoder => _NotusHTMLEncoder();
 }
 
-class keys {
+class Keys {
   static final line = "line";
   static final inline = "inline";
 }
 
-class deltaKeys {
+class DeltaKeys {
   static const ol = "ol";
   static const ul = "ul";
   static const a = "a";
@@ -44,7 +44,7 @@ class deltaKeys {
   static const embed = "embed";
 }
 
-class htmlKeys {
+class HtmlKeys {
   static const blockquote = "blockquote";
   static const unorderedList = "ul";
   static const orderedList = "ol";
@@ -66,26 +66,26 @@ class htmlKeys {
 
 String htmlTagNameToDeltaAttributeName(String htmlTag) {
   switch (htmlTag) {
-    case htmlKeys.blockquote:
-    case htmlKeys.unorderedList:
-    case htmlKeys.orderedList:
-    case htmlKeys.preformatted:
-      return deltaKeys.block;
-    case htmlKeys.h1:
-    case htmlKeys.h2:
-    case htmlKeys.h3:
-      return deltaKeys.heading;
-    case htmlKeys.anchor:
-      return deltaKeys.a;
-    case htmlKeys.bold:
-      return deltaKeys.b;
-    case htmlKeys.italic:
-      return deltaKeys.i;
-    case htmlKeys.horizontalRule:
-    case htmlKeys.image:
-      return deltaKeys.embed;
-    case htmlKeys.br:
-    case htmlKeys.list:
+    case HtmlKeys.blockquote:
+    case HtmlKeys.unorderedList:
+    case HtmlKeys.orderedList:
+    case HtmlKeys.preformatted:
+      return DeltaKeys.block;
+    case HtmlKeys.h1:
+    case HtmlKeys.h2:
+    case HtmlKeys.h3:
+      return DeltaKeys.heading;
+    case HtmlKeys.anchor:
+      return DeltaKeys.a;
+    case HtmlKeys.bold:
+      return DeltaKeys.b;
+    case HtmlKeys.italic:
+      return DeltaKeys.i;
+    case HtmlKeys.horizontalRule:
+    case HtmlKeys.image:
+      return DeltaKeys.embed;
+    case HtmlKeys.br:
+    case HtmlKeys.list:
     default:
       return null;
   }
@@ -93,9 +93,9 @@ String htmlTagNameToDeltaAttributeName(String htmlTag) {
 
 class _NotusHTMLEncoder extends Converter<Delta, String> {
   static final kSimpleBlocks = <NotusAttribute, String>{
-    NotusAttribute.bq: htmlKeys.blockquote,
-    NotusAttribute.ul: htmlKeys.unorderedList,
-    NotusAttribute.ol: htmlKeys.orderedList,
+    NotusAttribute.bq: HtmlKeys.blockquote,
+    NotusAttribute.ul: HtmlKeys.unorderedList,
+    NotusAttribute.ol: HtmlKeys.orderedList,
   };
   Map<String, dynamic> container;
 
@@ -150,9 +150,9 @@ class _NotusHTMLEncoder extends Converter<Delta, String> {
             _writeBlockTag(buffer, blockStyle, start: true);
             buffer.writeln();
           }
-          buffer.write("<${htmlKeys.list}>");
+          buffer.write("<${HtmlKeys.list}>");
           buffer.write(line);
-          buffer.write("</${htmlKeys.list}>");
+          buffer.write("</${HtmlKeys.list}>");
           buffer.writeln();
           if (i == currentBlockLines.length - 1) {
             _writeBlockTag(buffer, blockStyle, close: true);
@@ -291,44 +291,44 @@ class _NotusHTMLEncoder extends Converter<Delta, String> {
   void _writeEmbedTag(
       StringBuffer buffer, NotusAttribute<Map<String, dynamic>> embed,
       {bool close = false}) {
-    if (embed.value[deltaKeys.type] == deltaKeys.image) {
+    if (embed.value[DeltaKeys.type] == DeltaKeys.image) {
       if (close) {
         return;
       }
       buffer.write(
-          "<${htmlKeys.image} ${htmlKeys.imageSrc}=\"${embed.value["source"]}\"${buildContainer(deltaKeys.embed)} />");
-    } else if (embed.value[deltaKeys.type] == deltaKeys.hr) {
+          "<${HtmlKeys.image} ${HtmlKeys.imageSrc}=\"${embed.value["source"]}\"${buildContainer(DeltaKeys.embed)} />");
+    } else if (embed.value[DeltaKeys.type] == DeltaKeys.hr) {
       if (close) {
         return;
       }
       buffer.write(
-          "<${htmlKeys.horizontalRule}${buildContainer(deltaKeys.embed)} />");
+          "<${HtmlKeys.horizontalRule}${buildContainer(DeltaKeys.embed)} />");
     }
   }
 
   void _writeBoldTag(StringBuffer buffer, {bool close = false}) {
     if (close) {
-      buffer.write('</${htmlKeys.bold}>');
+      buffer.write('</${HtmlKeys.bold}>');
     } else {
-      buffer.write("<${htmlKeys.bold}${buildContainer(deltaKeys.b)}>");
+      buffer.write("<${HtmlKeys.bold}${buildContainer(DeltaKeys.b)}>");
     }
   }
 
   void _writeItalicTag(StringBuffer buffer, {bool close = false}) {
     if (close) {
-      buffer.write('</${htmlKeys.italic}>');
+      buffer.write('</${HtmlKeys.italic}>');
     } else {
-      buffer.write("<${htmlKeys.italic}${buildContainer(deltaKeys.i)}>");
+      buffer.write("<${HtmlKeys.italic}${buildContainer(DeltaKeys.i)}>");
     }
   }
 
   void _writeLinkTag(StringBuffer buffer, NotusAttribute<String> link,
       {bool close = false}) {
     if (close) {
-      buffer.write('</${htmlKeys.anchor}>');
+      buffer.write('</${HtmlKeys.anchor}>');
     } else {
       buffer.write(
-          '<${htmlKeys.anchor} ${htmlKeys.anchorHref}=\"${link.value}\"${buildContainer(deltaKeys.a)}>');
+          '<${HtmlKeys.anchor} ${HtmlKeys.anchorHref}=\"${link.value}\"${buildContainer(DeltaKeys.a)}>');
     }
   }
 
@@ -336,10 +336,10 @@ class _NotusHTMLEncoder extends Converter<Delta, String> {
       {bool close = false}) {
     var level = heading.value;
     if (close) {
-      buffer.write('</${htmlKeys.heading}$level>');
+      buffer.write('</${HtmlKeys.heading}$level>');
     } else {
       buffer.write(
-          '<${htmlKeys.heading}$level${buildContainer(deltaKeys.heading)}>');
+          '<${HtmlKeys.heading}$level${buildContainer(DeltaKeys.heading)}>');
     }
   }
 
@@ -347,9 +347,9 @@ class _NotusHTMLEncoder extends Converter<Delta, String> {
       {bool close = false, bool start = false}) {
     if (block == NotusAttribute.code) {
       if (start) {
-        buffer.write('<${htmlKeys.preformatted}${buildContainer(block.key)}>');
+        buffer.write('<${HtmlKeys.preformatted}${buildContainer(block.key)}>');
       } else if (close) {
-        buffer.write('</${htmlKeys.preformatted}>');
+        buffer.write('</${HtmlKeys.preformatted}>');
       }
     } else {
       final tag = kSimpleBlocks[block];
@@ -363,19 +363,19 @@ class _NotusHTMLEncoder extends Converter<Delta, String> {
 }
 
 var _allowedHTMLTag = Set<String>.from([
-  htmlKeys.anchor,
-  htmlKeys.bold,
-  htmlKeys.unorderedList,
-  htmlKeys.orderedList,
-  htmlKeys.list,
-  htmlKeys.blockquote,
-  htmlKeys.horizontalRule,
-  htmlKeys.italic,
-  htmlKeys.h1,
-  htmlKeys.h2,
-  htmlKeys.h3,
-  htmlKeys.image,
-  htmlKeys.preformatted,
+  HtmlKeys.anchor,
+  HtmlKeys.bold,
+  HtmlKeys.unorderedList,
+  HtmlKeys.orderedList,
+  HtmlKeys.list,
+  HtmlKeys.blockquote,
+  HtmlKeys.horizontalRule,
+  HtmlKeys.italic,
+  HtmlKeys.h1,
+  HtmlKeys.h2,
+  HtmlKeys.h3,
+  HtmlKeys.image,
+  HtmlKeys.preformatted,
 ]);
 
 void setDeltaAllowedTagForHTMLDecoder(Set<String> tagList) {
@@ -383,7 +383,7 @@ void setDeltaAllowedTagForHTMLDecoder(Set<String> tagList) {
 }
 
 bool isAllowedHTML(Element elem) {
-  if (elem.localName == htmlKeys.br && elem.children.isEmpty) {
+  if (elem.localName == HtmlKeys.br && elem.children.isEmpty) {
     return true;
   }
   Queue queue = Queue<Element>();
@@ -399,11 +399,11 @@ bool isAllowedHTML(Element elem) {
 }
 
 bool isInlineAttribute(String tag) {
-  if (tag == htmlKeys.anchor ||
-      tag == htmlKeys.bold ||
-      tag == htmlKeys.italic ||
-      tag == htmlKeys.horizontalRule ||
-      tag == htmlKeys.image) {
+  if (tag == HtmlKeys.anchor ||
+      tag == HtmlKeys.bold ||
+      tag == HtmlKeys.italic ||
+      tag == HtmlKeys.horizontalRule ||
+      tag == HtmlKeys.image) {
     return true;
   }
   return false;
@@ -415,63 +415,63 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
     var deltaAttributeLine = Map<String, dynamic>();
     for (final elem in elemStack) {
       switch (elem.localName) {
-        case htmlKeys.image:
-          deltaAttributeInline[deltaKeys.embed] = {
-            deltaKeys.type: deltaKeys.image,
-            deltaKeys.imageSrc: elem.attributes[htmlKeys.imageSrc],
+        case HtmlKeys.image:
+          deltaAttributeInline[DeltaKeys.embed] = {
+            DeltaKeys.type: DeltaKeys.image,
+            DeltaKeys.imageSrc: elem.attributes[HtmlKeys.imageSrc],
           };
           break;
-        case htmlKeys.preformatted:
-          deltaAttributeLine[deltaKeys.block] = deltaKeys.code;
+        case HtmlKeys.preformatted:
+          deltaAttributeLine[DeltaKeys.block] = DeltaKeys.code;
           break;
-        case htmlKeys.blockquote:
-          deltaAttributeLine[deltaKeys.block] = deltaKeys.quote;
+        case HtmlKeys.blockquote:
+          deltaAttributeLine[DeltaKeys.block] = DeltaKeys.quote;
           break;
-        case htmlKeys.horizontalRule:
-          deltaAttributeInline[deltaKeys.embed] = {
-            deltaKeys.type: deltaKeys.hr
+        case HtmlKeys.horizontalRule:
+          deltaAttributeInline[DeltaKeys.embed] = {
+            DeltaKeys.type: DeltaKeys.hr
           };
           break;
-        case htmlKeys.list:
-          if (elem.parent.localName == htmlKeys.orderedList) {
-            deltaAttributeLine[deltaKeys.block] = deltaKeys.ol;
-          } else if (elem.parent.localName == htmlKeys.unorderedList) {
-            deltaAttributeLine[deltaKeys.block] = deltaKeys.ul;
+        case HtmlKeys.list:
+          if (elem.parent.localName == HtmlKeys.orderedList) {
+            deltaAttributeLine[DeltaKeys.block] = DeltaKeys.ol;
+          } else if (elem.parent.localName == HtmlKeys.unorderedList) {
+            deltaAttributeLine[DeltaKeys.block] = DeltaKeys.ul;
           }
           break;
-        case htmlKeys.orderedList:
-        case htmlKeys.unorderedList:
+        case HtmlKeys.orderedList:
+        case HtmlKeys.unorderedList:
           break;
-        case htmlKeys.h1:
-        case htmlKeys.h2:
-        case htmlKeys.h3:
-          deltaAttributeLine[deltaKeys.heading] =
+        case HtmlKeys.h1:
+        case HtmlKeys.h2:
+        case HtmlKeys.h3:
+          deltaAttributeLine[DeltaKeys.heading] =
               (int.parse(elem.localName[1]));
           break;
-        case htmlKeys.anchor:
-          deltaAttributeInline[deltaKeys.a] =
-              elem.attributes[htmlKeys.anchorHref];
+        case HtmlKeys.anchor:
+          deltaAttributeInline[DeltaKeys.a] =
+              elem.attributes[HtmlKeys.anchorHref];
           break;
-        case htmlKeys.bold:
-        case htmlKeys.italic:
+        case HtmlKeys.bold:
+        case HtmlKeys.italic:
           deltaAttributeInline[elem.localName] = true;
           break;
-        case htmlKeys.br:
+        case HtmlKeys.br:
           break;
         default:
           throw Exception("${elem.localName} not allowed");
       }
       final attr = Map<String, dynamic>.from(elem.attributes);
-      if (elem.localName == htmlKeys.anchor) {
-        attr.remove(htmlKeys.anchorHref);
+      if (elem.localName == HtmlKeys.anchor) {
+        attr.remove(HtmlKeys.anchorHref);
       }
-      if (elem.localName == htmlKeys.image) {
-        attr.remove(htmlKeys.imageSrc);
+      if (elem.localName == HtmlKeys.image) {
+        attr.remove(HtmlKeys.imageSrc);
       }
     }
     return Map<String, Map<String, dynamic>>.from({
-      keys.inline: deltaAttributeInline,
-      keys.line: deltaAttributeLine,
+      Keys.inline: deltaAttributeInline,
+      Keys.line: deltaAttributeLine,
     });
   }
 
@@ -479,8 +479,8 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
     final deltaFormatList = List<dynamic>();
     void insert(idx, String text, elemStack) {
       Map<String, Map<String, dynamic>> attrMap = toDeltaAttribute(elemStack);
-      Map<String, dynamic> attrLine = attrMap[keys.line];
-      Map<String, dynamic> attrInline = attrMap[keys.inline];
+      Map<String, dynamic> attrLine = attrMap[Keys.line];
+      Map<String, dynamic> attrInline = attrMap[Keys.inline];
       if (text.isEmpty && attrInline.isEmpty && attrLine.isEmpty) return;
       final int originalLength = deltaFormatList.length;
       int shiftIdx() => idx + deltaFormatList.length - originalLength;
@@ -489,25 +489,25 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
           if (attrInline.isEmpty) {
             deltaFormatList.insert(
               shiftIdx(),
-              {deltaKeys.insert: txt},
+              {DeltaKeys.insert: txt},
             );
           } else {
             deltaFormatList.insert(shiftIdx(), {
-              deltaKeys.insert: txt,
-              deltaKeys.attributes: attrInline,
+              DeltaKeys.insert: txt,
+              DeltaKeys.attributes: attrInline,
             });
           }
         } else if (attrInline.containsKey("embed")) {
           deltaFormatList.insert(shiftIdx(), {
-            deltaKeys.insert: String.fromCharCode(8203),
-            deltaKeys.attributes: attrInline,
+            DeltaKeys.insert: String.fromCharCode(8203),
+            DeltaKeys.attributes: attrInline,
           });
         }
         if (attrLine.isNotEmpty &&
             (txt.isNotEmpty || attrInline.containsKey("embed"))) {
           deltaFormatList.insert(shiftIdx(), {
-            deltaKeys.insert: "\n",
-            deltaKeys.attributes: attrLine,
+            DeltaKeys.insert: "\n",
+            DeltaKeys.attributes: attrLine,
           });
         }
       }
@@ -523,7 +523,7 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
 
     final elemStack = Queue<Element>.from([element]);
     if (element.children.isEmpty) {
-      if (element.localName == htmlKeys.br) {
+      if (element.localName == HtmlKeys.br) {
         insert(0, "\n", Queue<Element>());
       } else {
         insert(0, element.text, elemStack);
@@ -548,8 +548,8 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
           int tagIdx = htmlString.indexOf(child.outerHtml, cursor);
           var intervalText = htmlString.substring(cursor, tagIdx);
           cursor = tagIdx + child.outerHtml.length;
-          if ((elem.localName != htmlKeys.orderedList &&
-                  elem.localName != htmlKeys.unorderedList) ||
+          if ((elem.localName != HtmlKeys.orderedList &&
+                  elem.localName != HtmlKeys.unorderedList) ||
               intervalText != '\n') {
             insert(i + shiftIdx(), intervalText, currentElemStack);
           }
@@ -564,8 +564,8 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
         }
         final lastInvervalText =
             htmlString.substring(cursor, htmlString.length);
-        if ((elem.localName != htmlKeys.orderedList &&
-                elem.localName != htmlKeys.unorderedList) ||
+        if ((elem.localName != HtmlKeys.orderedList &&
+                elem.localName != HtmlKeys.unorderedList) ||
             lastInvervalText != '\n') {
           insert(i + shiftIdx(), lastInvervalText, currentElemStack);
         }
@@ -596,13 +596,13 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
     void addPlainTextToDeltaList(text) {
       if (text.isNotEmpty && text != String.fromCharCode(8203)) {
         if (deltaFormatList.isNotEmpty &&
-            deltaFormatList[deltaFormatList.length - 1][deltaKeys.attributes] ==
+            deltaFormatList[deltaFormatList.length - 1][DeltaKeys.attributes] ==
                 null) {
-          deltaFormatList[deltaFormatList.length - 1][deltaKeys.insert] += text;
+          deltaFormatList[deltaFormatList.length - 1][DeltaKeys.insert] += text;
         } else {
           deltaFormatList.add({
-            deltaKeys.insert: text,
-            deltaKeys.attributes: null,
+            DeltaKeys.insert: text,
+            DeltaKeys.attributes: null,
           });
         }
       }
@@ -627,15 +627,15 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
       for (int i = 1; i < deltaList.length; i++) {
         Map<String, dynamic> prev = deltaList[i - 1];
         Map<String, dynamic> current = deltaList[i];
-        String text = current[deltaKeys.insert];
+        String text = current[DeltaKeys.insert];
         if (text.startsWith("\n")) {
-          Map<String, dynamic> attr = prev[deltaKeys.attributes];
+          Map<String, dynamic> attr = prev[DeltaKeys.attributes];
           if (attr != null &&
               (attr.containsKey("block") || attr.containsKey("heading"))) {
             if (text == "\n") {
               deltaList.remove(current);
             } else {
-              current[deltaKeys.insert] = text.replaceFirst("\n", "");
+              current[DeltaKeys.insert] = text.replaceFirst("\n", "");
             }
           }
         }
@@ -644,17 +644,17 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
 
     avoidConcatinatingPlainTextAndLineAttributes(deltaList) {
       bool isIncludeLineAttributes(Map<String, dynamic> jsonDelta) {
-        if (!jsonDelta.containsKey(deltaKeys.attributes)) {
+        if (!jsonDelta.containsKey(DeltaKeys.attributes)) {
           return false;
         }
-        Map<String, dynamic> attr = jsonDelta[deltaKeys.attributes];
+        Map<String, dynamic> attr = jsonDelta[DeltaKeys.attributes];
         if (attr == null) {
           return false;
         }
-        if (attr.containsKey(deltaKeys.heading) ||
-            attr.containsKey(deltaKeys.quote) ||
-            attr.containsKey(deltaKeys.ol) ||
-            attr.containsKey(deltaKeys.ul)) {
+        if (attr.containsKey(DeltaKeys.heading) ||
+            attr.containsKey(DeltaKeys.quote) ||
+            attr.containsKey(DeltaKeys.ol) ||
+            attr.containsKey(DeltaKeys.ul)) {
           return true;
         }
         return false;
@@ -665,33 +665,33 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
         Map<String, dynamic> current = deltaList[i];
         Map<String, dynamic> prev = deltaList[i - 1];
         if (isIncludeLineAttributes(next) &&
-            !prev[deltaKeys.insert].endsWith('\n')) {
-          current[deltaKeys.insert] = '\n' + current[deltaKeys.insert];
+            !prev[DeltaKeys.insert].endsWith('\n')) {
+          current[DeltaKeys.insert] = '\n' + current[DeltaKeys.insert];
         }
       }
     }
 
     ensureEndWithNewLine(deltaList) {
       int lastIndex = deltaList.length - 1;
-      String lastText = deltaList[lastIndex][deltaKeys.insert];
+      String lastText = deltaList[lastIndex][DeltaKeys.insert];
       if (!lastText.endsWith("\n")) {
-        if (deltaList[lastIndex][deltaKeys.attributes] != null) {
-          deltaList.add({deltaKeys.insert: "\n"});
+        if (deltaList[lastIndex][DeltaKeys.attributes] != null) {
+          deltaList.add({DeltaKeys.insert: "\n"});
         } else {
-          deltaList[lastIndex][deltaKeys.insert] = lastText + "\n";
+          deltaList[lastIndex][DeltaKeys.insert] = lastText + "\n";
         }
       }
     }
 
     removeZeroWidthSpaceFromNonEmbed(deltaList) {
       for (Map<String, dynamic> deltaFormat in deltaList) {
-        Map<String, dynamic> attr = deltaFormat[deltaKeys.attributes];
-        if (attr != null && attr.containsKey(deltaKeys.embed)) {
+        Map<String, dynamic> attr = deltaFormat[DeltaKeys.attributes];
+        if (attr != null && attr.containsKey(DeltaKeys.embed)) {
           continue;
         }
-        String text = deltaFormat[deltaKeys.insert];
+        String text = deltaFormat[DeltaKeys.insert];
         text = text.replaceAll(String.fromCharCode(8203), "");
-        deltaFormat[deltaKeys.insert] = text;
+        deltaFormat[DeltaKeys.insert] = text;
       }
     }
 
@@ -702,22 +702,22 @@ class _HTMLNotusDecoder extends Converter<String, Delta> {
             (i == deltaList.length - 1) ? null : deltaList[i + 1];
         Map<String, dynamic> current = deltaList[i];
         Map<String, dynamic> nextAttr =
-            (i == deltaList.length - 1) ? null : next[deltaKeys.attributes];
-        Map<String, dynamic> currentAttr = current[deltaKeys.attributes];
+            (i == deltaList.length - 1) ? null : next[DeltaKeys.attributes];
+        Map<String, dynamic> currentAttr = current[DeltaKeys.attributes];
         Map<String, dynamic> prevAttr =
-            (i == 0) ? null : prev[deltaKeys.attributes];
+            (i == 0) ? null : prev[DeltaKeys.attributes];
         if (currentAttr == null ||
-            !currentAttr.containsKey(deltaKeys.a) ||
-            !currentAttr.containsKey(deltaKeys.embed) ||
-            currentAttr[deltaKeys.embed][deltaKeys.type] != deltaKeys.image) {
+            !currentAttr.containsKey(DeltaKeys.a) ||
+            !currentAttr.containsKey(DeltaKeys.embed) ||
+            currentAttr[DeltaKeys.embed][DeltaKeys.type] != DeltaKeys.image) {
           continue;
         }
-        if (nextAttr != null && nextAttr.containsKey(deltaKeys.a)) {
-          current[deltaKeys.insert] = current[deltaKeys.insert] + "\n";
+        if (nextAttr != null && nextAttr.containsKey(DeltaKeys.a)) {
+          current[DeltaKeys.insert] = current[DeltaKeys.insert] + "\n";
         }
-        if (prevAttr != null && prevAttr.containsKey(deltaKeys.a)) {
-          current[deltaKeys.insert] = current[deltaKeys.insert] + "\n";
-          prev[deltaKeys.insert] = prev[deltaKeys.insert] + "\n";
+        if (prevAttr != null && prevAttr.containsKey(DeltaKeys.a)) {
+          current[DeltaKeys.insert] = current[DeltaKeys.insert] + "\n";
+          prev[DeltaKeys.insert] = prev[DeltaKeys.insert] + "\n";
         }
       }
     }
