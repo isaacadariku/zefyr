@@ -221,7 +221,8 @@ class ZefyrToolbarState extends State<ZefyrToolbar>
     final toolbar = ZefyrToolbarScaffold(
       key: _toolbarKey,
       body: ZefyrButtonList(buttons: _buildButtons(context)),
-      trailing: buildButton(context, ZefyrToolbarAction.hideKeyboard),
+      trailing: SizedBox.shrink(),
+      //buildButton(context, ZefyrToolbarAction.hideKeyboard),
     );
 
     layers.add(toolbar);
@@ -258,7 +259,7 @@ class ZefyrToolbarState extends State<ZefyrToolbar>
       buildButton(context, ZefyrToolbarAction.numberList),
       // buildButton(context, ZefyrToolbarAction.quote),
       // buildButton(context, ZefyrToolbarAction.code),
-      buildButton(context, ZefyrToolbarAction.horizontalRule),
+      // buildButton(context, ZefyrToolbarAction.horizontalRule),
       editor.imageDelegate != null ? ImageButton() : Container(),
     ];
     return buttons;

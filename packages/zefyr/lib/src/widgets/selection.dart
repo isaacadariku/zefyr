@@ -45,12 +45,6 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
   final ClipboardStatusNotifier _clipboardStatus =
       kIsWeb ? null : ClipboardStatusNotifier();
 
-  /// Global position of last TapDown event.
-  Offset _lastTapDownPosition;
-
-  /// Global position of last TapDown which is potentially a long press.
-  Offset _longPressPosition;
-
   OverlayState _overlay;
   OverlayEntry _toolbar;
   AnimationController _toolbarController;
@@ -179,12 +173,11 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final overlay = GestureDetector(
+    final overlay = TextSelectionGestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTapDown: _handleTapDown,
-      onTap: _handleTap,
-      onTapCancel: _handleTapCancel,
-      onLongPress: _handleLongPress,
+      onSingleTapUp: _handleTap,
+      onSingleLongTapStart: _handleLongPress,
+      onDoubleTapDown: _handleDoubleTap,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -248,20 +241,8 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
     });
   }
 
-  void _handleTapDown(TapDownDetails details) {
-    _lastTapDownPosition = details.globalPosition;
-  }
-
-  void _handleTapCancel() {
-    // longPress arrives after tapCancel, so remember the tap position.
-    _longPressPosition = _lastTapDownPosition;
-    _lastTapDownPosition = null;
-  }
-
-  void _handleTap() {
-    assert(_lastTapDownPosition != null);
-    final globalPoint = _lastTapDownPosition;
-    _lastTapDownPosition = null;
+  void _handleTap(TapUpDetails details) {
+    final Offset globalPoint = details.globalPosition;
     final result = HitTestResult();
     WidgetsBinding.instance.hitTest(result, globalPoint);
 
@@ -288,9 +269,15 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
     _scope.controller.updateSelection(selection, source: ChangeSource.local);
   }
 
-  void _handleLongPress() {
-    final globalPoint = _longPressPosition;
-    _longPressPosition = null;
+  void _handleDoubleTap(TapDownDetails details) {
+    _wordSelectionFromPosition(details.globalPosition);
+  }
+
+  void _handleLongPress(LongPressStartDetails details) {
+    _wordSelectionFromPosition(details.globalPosition);
+  }
+
+  void _wordSelectionFromPosition(Offset globalPoint) {
     final result = HitTestResult();
     WidgetsBinding.instance.hitTest(result, globalPoint);
     final box = _getEditableBox(result);

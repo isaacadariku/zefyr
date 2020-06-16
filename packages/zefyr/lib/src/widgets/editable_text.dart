@@ -113,7 +113,9 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
   void requestKeyboard() {
     if (_focusNode.hasFocus) {
       _input.openConnection(
-          widget.controller.plainTextEditingValue, widget.keyboardAppearance);
+        widget.controller.plainTextEditingValue,
+        widget.keyboardAppearance,
+      );
     } else {
       FocusScope.of(context).requestFocus(_focusNode);
     }
@@ -230,7 +232,9 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
 
   List<Widget> _buildChildren(BuildContext context) {
     final result = <Widget>[];
-    for (var node in document.root.children) {
+    print('Nodes:');
+    for (Node node in document.root.children) {
+      print(node.runtimeType.toString() + '\t| ' + node.toString());
       result.add(_defaultChildBuilder(context, node));
     }
     return result;
@@ -240,25 +244,23 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
     if (node is LineNode) {
       if (node.hasEmbed) {
         return ZefyrLine(node: node);
-      } else if (node.style.contains(NotusAttribute.heading)) {
-        return ZefyrHeading(node: node);
       }
       return ZefyrParagraph(node: node);
-    }
+    } else {
+      final BlockNode block = node;
+      final blockStyle = block.style.get(NotusAttribute.block);
+      if (blockStyle == NotusAttribute.block.code) {
+        return ZefyrCode(node: block);
+      } else if (blockStyle == NotusAttribute.block.bulletList) {
+        return ZefyrList(node: block);
+      } else if (blockStyle == NotusAttribute.block.numberList) {
+        return ZefyrList(node: block);
+      } else if (blockStyle == NotusAttribute.block.quote) {
+        return ZefyrQuote(node: block);
+      }
 
-    final BlockNode block = node;
-    final blockStyle = block.style.get(NotusAttribute.block);
-    if (blockStyle == NotusAttribute.block.code) {
-      return ZefyrCode(node: block);
-    } else if (blockStyle == NotusAttribute.block.bulletList) {
-      return ZefyrList(node: block);
-    } else if (blockStyle == NotusAttribute.block.numberList) {
-      return ZefyrList(node: block);
-    } else if (blockStyle == NotusAttribute.block.quote) {
-      return ZefyrQuote(node: block);
+      throw UnimplementedError('Block format $blockStyle.');
     }
-
-    throw UnimplementedError('Block format $blockStyle.');
   }
 
   void _updateSubscriptions([ZefyrEditableText oldWidget]) {

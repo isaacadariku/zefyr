@@ -355,7 +355,7 @@ class HeadingAttributeBuilder extends NotusAttributeBuilder<int> {
   static const _kHeading = 'heading';
 
   const HeadingAttributeBuilder._()
-      : super._(_kHeading, NotusAttributeScope.line);
+      : super._(_kHeading, NotusAttributeScope.inline);
 
   /// Level 1 heading, equivalent of `H1` in HTML.
   NotusAttribute<int> get level1 => NotusAttribute<int>._(key, scope, 1);

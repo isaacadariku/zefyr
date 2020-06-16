@@ -291,13 +291,13 @@ class AttributeTheme {
   final TextStyle link;
 
   /// Style theme used to render largest headings.
-  final LineTheme heading1;
+  final TextStyle heading1;
 
   /// Style theme used to render medium headings.
-  final LineTheme heading2;
+  final TextStyle heading2;
 
   /// Style theme used to render smaller headings.
-  final LineTheme heading3;
+  final TextStyle heading3;
 
   /// Style theme used to render bullet lists.
   final BlockTheme bulletList;
@@ -327,7 +327,9 @@ class AttributeTheme {
 
   /// The default attribute theme.
   factory AttributeTheme.fallback(
-      BuildContext context, LineTheme defaultLineTheme) {
+    BuildContext context,
+    LineTheme defaultLineTheme,
+  ) {
     final theme = Theme.of(context);
 
     String monospaceFontFamily;
@@ -351,32 +353,23 @@ class AttributeTheme {
         decoration: TextDecoration.underline,
         color: theme.accentColor,
       ),
-      heading1: LineTheme(
-        textStyle: defaultLineTheme.textStyle.copyWith(
-          fontSize: 34.0,
-          color: defaultLineTheme.textStyle.color.withOpacity(0.7),
-          height: 1.15,
-          fontWeight: FontWeight.w300,
-        ),
-        padding: EdgeInsets.only(top: 16.0),
+      heading1: TextStyle(
+        fontSize: 34.0,
+        color: defaultLineTheme.textStyle.color.withOpacity(0.7),
+        height: 1.15,
+        fontWeight: FontWeight.w300,
       ),
-      heading2: LineTheme(
-        textStyle: defaultLineTheme.textStyle.copyWith(
-          fontSize: 24.0,
-          color: defaultLineTheme.textStyle.color.withOpacity(0.7),
-          height: 1.15,
-          fontWeight: FontWeight.normal,
-        ),
-        padding: EdgeInsets.only(top: 8.0),
+      heading2: TextStyle(
+        fontSize: 24.0,
+        color: defaultLineTheme.textStyle.color.withOpacity(0.7),
+        height: 1.15,
+        fontWeight: FontWeight.normal,
       ),
-      heading3: LineTheme(
-        textStyle: defaultLineTheme.textStyle.copyWith(
-          fontSize: 20.0,
-          color: defaultLineTheme.textStyle.color.withOpacity(0.7),
-          height: 1.15,
-          fontWeight: FontWeight.w500,
-        ),
-        padding: EdgeInsets.only(top: 8.0),
+      heading3: TextStyle(
+        fontSize: 20.0,
+        color: defaultLineTheme.textStyle.color.withOpacity(0.7),
+        height: 1.15,
+        fontWeight: FontWeight.w500,
       ),
       bulletList: BlockTheme(
         padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -413,9 +406,9 @@ class AttributeTheme {
     TextStyle bold,
     TextStyle italic,
     TextStyle link,
-    LineTheme heading1,
-    LineTheme heading2,
-    LineTheme heading3,
+    TextStyle heading1,
+    TextStyle heading2,
+    TextStyle heading3,
     BlockTheme bulletList,
     BlockTheme numberList,
     BlockTheme quote,

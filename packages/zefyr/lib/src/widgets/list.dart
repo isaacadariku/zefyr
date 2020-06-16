@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:notus/notus.dart';
 
 import 'common.dart';
-import 'paragraph.dart';
 import 'theme.dart';
 
 /// Represents number lists and bullet lists in a Zefyr editor.
@@ -65,20 +64,13 @@ class ZefyrListItem extends StatelessWidget {
     Widget content;
     EdgeInsets padding;
 
-    if (node.style.contains(NotusAttribute.heading)) {
-      final headingTheme = ZefyrHeading.themeOf(node, context);
-      textStyle = headingTheme.textStyle;
-      padding = headingTheme.padding;
-      content = ZefyrHeading(node: node);
-    } else {
-      textStyle = theme.defaultLineTheme.textStyle;
-      content = ZefyrLine(
-        node: node,
-        style: textStyle,
-        padding: blockTheme.linePadding,
-      );
-      padding = blockTheme.linePadding;
-    }
+    textStyle = theme.defaultLineTheme.textStyle;
+    content = ZefyrLine(
+      node: node,
+      style: textStyle,
+      padding: blockTheme.linePadding,
+    );
+    padding = blockTheme.linePadding;
 
     Widget bullet =
         SizedBox(width: 24.0, child: Text(bulletText, style: textStyle));
