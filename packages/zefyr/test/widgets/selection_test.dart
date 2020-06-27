@@ -80,7 +80,7 @@ void main() {
       expect(editor.controller.selection.isCollapsed, isTrue);
       expect(editor.controller.selection.extentOffset,
           2); // Note that this is probably too fragile.
-     });
+    });
 
     testWidgets('tap on empty space above finds closest paragraph',
         (tester) async {
@@ -96,5 +96,6 @@ void main() {
       RenderBox renderObject =
           tester.firstRenderObject(find.byType(ZefyrEditableText));
       var offset = renderObject.localToGlobal(Offset.zero);
+    });
   });
 }

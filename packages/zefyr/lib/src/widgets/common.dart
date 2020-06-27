@@ -148,15 +148,6 @@ class _ZefyrLineState extends State<ZefyrLine> {
     if (style.contains(NotusAttribute.link)) {
       result = result.merge(theme.attributeTheme.link);
     }
-    // If the style contains multiple headings then the largest one takes 
-    // precedence
-    if (style.contains(NotusAttribute.h1)) {
-      result = result.merge(theme.attributeTheme.heading1);
-    } else if (style.contains(NotusAttribute.h2)) {
-      result = result.merge(theme.attributeTheme.heading2);
-    } else if (style.contains(NotusAttribute.h3)) {
-      result = result.merge(theme.attributeTheme.heading3);
-    }
     return result;
   }
 

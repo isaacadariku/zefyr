@@ -5,7 +5,8 @@
 
 Style attributes in Notus documents are simple key-value pairs, where
 keys identify the attribute and value describes the style applied, for
-instance, `{ "b": true }` defines bold style for a piece of text (equivalent of `b` or `strong` in HTML).
+instance, `{ "heading": 1 }` defines heading style for a line of
+text with value `1` (equivalent of `h1` in HTML).
 
 Note that one attribute can describe multiple different styles depending
 on the current value. E.g. attribute with key "heading" can be set to values
@@ -14,7 +15,7 @@ a line of text from being formatted as `h1` and `h2` heading at the same time,
 which is intentional.
 
 Additionally, each attribute gets assigned one of two scopes. An
-attribute can be either _inline-scoped_ or _line-scoped_, but not both.
+attribute can be either *inline-scoped* or *line-scoped*, but not both.
 A good example of an inline-scoped attribute is "bold" attribute. Bold
 style can be applied to any character within a line, but not to the
 line itself. Similarly "heading" style is line-scoped and has effect
@@ -24,11 +25,11 @@ Below table summarizes information about all currently supported
 attributes in Zefyr:
 
 | Name    | Key       | Scope    | Type     | Valid values                           |
-| ------- | --------- | -------- | -------- | -------------------------------------- |
+|---------|-----------|----------|----------|----------------------------------------|
 | Bold    | `b`       | `inline` | `bool`   | `true`                                 |
 | Italic  | `i`       | `inline` | `bool`   | `true`                                 |
 | Link    | `a`       | `inline` | `String` | Non-empty string                       |
-| Heading | `heading` | `inline` | `int`    | `1`, `2` and `3`                       |
+| Heading | `heading` | `line`   | `int`    | `1`, `2` and `3`                       |
 | Block   | `block`   | `line`   | `String` | `"ul"`, `"ol"`, `"code"` and `"quote"` |
 | Embed   | `embed`   | `inline` | `Map`    | `"hr"`, `"image"`                      |
 
@@ -49,8 +50,11 @@ void makeItPretty(NotusDocument document) {
   // Similarly for italic.
   document.format(0, 5, NotusAttribute.italic);
 
-  // And similarly for headings
-  document.format(0, 5, NotusAttribute.heading.level1);
+  // Format the first line as a heading (level 1).
+  // Note that there is no need to specify character range of the whole
+  // line. Simply set index position to anywhere within the line and
+  // length to 0.
+  document.format(0, 0, NotusAttribute.heading.level1);
 
   // Add a link:
   document.format(10, 15, NotusAttribute.link.fromString('https://github.com'));
@@ -92,10 +96,10 @@ The first line is formatted as an `h1` heading and on the second line
 there is bold-styled word "Flutter":
 
 ```dart
-var delta = Delta();
+var delta = new Delta();
 delta
-  ..insert('Zefyr Editor', attributes: {'heading': 1})
-  ..insert('\n')
+  ..insert('Zefyr Editor')
+  ..insert('\n', attributes: {'heading': 1})
   ..insert('A rich text editor for ');
   ..insert('Flutter', attributes: {'b': true});
   ..insert('\n');

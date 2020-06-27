@@ -244,6 +244,8 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
     if (node is LineNode) {
       if (node.hasEmbed) {
         return ZefyrLine(node: node);
+      } else if (node.style.contains(NotusAttribute.heading)) {
+        return ZefyrHeading(node: node);
       }
       return ZefyrParagraph(node: node);
     } else {
