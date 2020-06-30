@@ -232,9 +232,7 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
 
   List<Widget> _buildChildren(BuildContext context) {
     final result = <Widget>[];
-    print('Nodes:');
     for (Node node in document.root.children) {
-      print(node.runtimeType.toString() + '\t| ' + node.toString());
       result.add(_defaultChildBuilder(context, node));
     }
     return result;
@@ -246,8 +244,9 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
         return ZefyrLine(node: node);
       } else if (node.style.contains(NotusAttribute.heading)) {
         return ZefyrHeading(node: node);
+      } else {
+        return ZefyrParagraph(node: node);
       }
-      return ZefyrParagraph(node: node);
     } else {
       final BlockNode block = node;
       final blockStyle = block.style.get(NotusAttribute.block);
