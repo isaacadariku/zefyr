@@ -270,10 +270,12 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
   }
 
   void _handleDoubleTap(TapDownDetails details) {
+    if (!_scope.mode.canSelect) return;
     _wordSelectionFromPosition(details.globalPosition);
   }
 
   void _handleLongPress(LongPressStartDetails details) {
+    if (!_scope.mode.canSelect) return;
     _wordSelectionFromPosition(details.globalPosition);
   }
 

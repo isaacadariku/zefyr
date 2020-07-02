@@ -150,13 +150,10 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
     super.build(context); // See AutomaticKeepAliveState.
 
     Widget body = ListBody(children: _buildChildren(context));
-    if (widget.padding != null) {
-      body = Padding(padding: widget.padding, child: body);
-    }
 
     body = SingleChildScrollView(
       physics: widget.physics,
-      controller: _scrollController,
+      padding: widget.padding,
       child: body,
     );
 
@@ -224,7 +221,6 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
   // Private members
   //
 
-  final ScrollController _scrollController = ScrollController();
   ZefyrRenderContext _renderContext;
   CursorTimer _cursorTimer;
   InputConnectionController _input;
