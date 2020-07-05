@@ -30,7 +30,6 @@ class ZefyrParagraph extends StatelessWidget {
   }
 }
 
-
 /// Represents heading-styled line in [ZefyrEditor].
 class ZefyrHeading extends StatelessWidget {
   ZefyrHeading({Key key, @required this.node, this.blockStyle})
