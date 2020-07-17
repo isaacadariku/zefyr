@@ -41,18 +41,18 @@ class _ZefyrLineState extends State<ZefyrLine> {
   Widget build(BuildContext context) {
     final scope = ZefyrScope.of(context);
     if (scope.isEditable) {
-      ensureVisible(context, scope);
+      _ensureVisible(context, scope);
     }
     final theme = Theme.of(context);
 
     Widget content;
     if (widget.node.hasEmbed) {
-      content = buildEmbed(context, scope);
+      content = _buildEmbed(context, scope);
     } else {
       assert(widget.style != null);
       content = ZefyrRichText(
         node: widget.node,
-        text: buildText(context),
+        text: _buildText(context),
       );
     }
 
@@ -91,16 +91,16 @@ class _ZefyrLineState extends State<ZefyrLine> {
     return content;
   }
 
-  void ensureVisible(BuildContext context, ZefyrScope scope) {
+  void _ensureVisible(BuildContext context, ZefyrScope scope) {
     if (scope.selection.isCollapsed &&
         widget.node.containsOffset(scope.selection.extentOffset)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        bringIntoView(context);
+        _bringIntoView(context);
       });
     }
   }
 
-  void bringIntoView(BuildContext context) {
+  void _bringIntoView(BuildContext context) {
     final scrollable = Scrollable.of(context);
     final object = context.findRenderObject();
     assert(object.attached);
@@ -119,7 +119,7 @@ class _ZefyrLineState extends State<ZefyrLine> {
     }
   }
 
-  TextSpan buildText(BuildContext context) {
+  TextSpan _buildText(BuildContext context) {
     final theme = ZefyrTheme.of(context);
     final children = widget.node.children
         .map((node) => _segmentToTextSpan(node, theme))
@@ -151,7 +151,7 @@ class _ZefyrLineState extends State<ZefyrLine> {
     return result;
   }
 
-  Widget buildEmbed(BuildContext context, ZefyrScope scope) {
+  Widget _buildEmbed(BuildContext context, ZefyrScope scope) {
     EmbedNode node = widget.node.children.single;
     EmbedAttribute embed = node.style.get(NotusAttribute.embed);
 
