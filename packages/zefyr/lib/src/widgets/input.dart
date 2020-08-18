@@ -6,7 +6,11 @@ import 'package:flutter/widgets.dart';
 import 'package:zefyr/util.dart';
 
 typedef RemoteValueChanged = Function(
-    int start, String deleted, String inserted, TextSelection selection);
+  int start,
+  String deleted,
+  String inserted,
+  TextSelection selection,
+);
 
 class InputConnectionController implements TextInputClient {
   InputConnectionController(this.onValueChanged)
@@ -198,5 +202,10 @@ class InputConnectionController implements TextInputClient {
   @override
   void showAutocorrectionPromptRect(int start, int end) {
     // TODO: implement showAutocorrectionPromptRect
+  }
+
+  @override
+  void performPrivateCommand(String action, Map<String, dynamic> data) {
+    // TODO: implement performPrivateCommand
   }
 }
