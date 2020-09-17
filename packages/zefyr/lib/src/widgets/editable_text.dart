@@ -169,7 +169,10 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
       controls: widget.selectionControls ?? defaultSelectionControls(context),
     ));
 
-    return Stack(fit: StackFit.expand, children: layers);
+    return MouseRegion(
+      cursor: SystemMouseCursors.text,
+      child: Stack(fit: StackFit.expand, children: layers),
+    );
   }
 
   @override
