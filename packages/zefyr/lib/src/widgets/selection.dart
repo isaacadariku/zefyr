@@ -653,6 +653,8 @@ class _SelectionToolbarState extends State<_SelectionToolbar> {
       endpoints,
       widget.selectionOverlay,
       widget.clipboardStatus,
+      // TODO this should be Offset? lastSecondaryTapDownPosition
+      null,
     );
     return CompositedTransformFollower(
       link: block.layerLink,
