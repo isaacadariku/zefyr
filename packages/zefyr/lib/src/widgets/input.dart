@@ -53,7 +53,12 @@ class InputConnectionController implements TextInputClient {
       )
         ..show()
         ..setEditingState(value);
-      _sentRemoteValues.add(value);
+      // adding value to _sentRemoteValues was preventing the last character
+      // from being removed as of flutter 2.0.
+      // updateEditingValue would be called with an empty value but it'd already
+      // exist in _sentRemoteValues because of the line below and hence nothing
+      // would happen.
+      // _sentRemoteValues.add(value);
     } else {
       _textInputConnection.show();
     }
