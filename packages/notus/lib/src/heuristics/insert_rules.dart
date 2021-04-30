@@ -36,7 +36,8 @@ class PreserveLineStyleOnSplitRule extends InsertRule {
 
   bool isEdgeLineSplit(Operation before, Operation after) {
     if (before == null) return true; // split at the beginning of a doc
-    return before.data.endsWith('\n') || after.data.startsWith('\n');
+    return (before.data as String).endsWith('\n') ||
+        (after.data as String).startsWith('\n');
   }
 
   @override
@@ -48,7 +49,7 @@ class PreserveLineStyleOnSplitRule extends InsertRule {
     final after = iter.next();
     if (isEdgeLineSplit(before, after)) return null;
     final result = Delta()..retain(index);
-    if (after.data.contains('\n')) {
+    if ((after.data as String).contains('\n')) {
       // It is not allowed to combine line and inline styles in insert
       // operation containing line-break together with other characters.
       // The only scenario we get such operation is when the text is plain.
@@ -61,7 +62,7 @@ class PreserveLineStyleOnSplitRule extends InsertRule {
     Map<String, dynamic> attributes;
     while (iter.hasNext) {
       final op = iter.next();
-      final lf = op.data.indexOf('\n');
+      final lf = (op.data as String).indexOf('\n');
       if (lf >= 0) {
         attributes = op.attributes;
         break;
@@ -86,7 +87,7 @@ class ResetLineFormatOnNewLineRule extends InsertRule {
     iter.skip(index);
     final target = iter.next();
 
-    if (target.data.startsWith('\n')) {
+    if ((target.data as String).startsWith('\n')) {
       Map<String, dynamic> resetStyle;
       if (target.attributes != null &&
           target.attributes.containsKey(NotusAttribute.heading.key)) {
@@ -109,8 +110,8 @@ class AutoExitBlockRule extends InsertRule {
   const AutoExitBlockRule();
 
   bool isEmptyLine(Operation previous, Operation target) {
-    return (previous == null || previous.data.endsWith('\n')) &&
-        target.data.startsWith('\n');
+    return (previous == null || (previous.data as String).endsWith('\n')) &&
+        (target.data as String).startsWith('\n');
   }
 
   @override
@@ -153,7 +154,8 @@ class PreserveInlineStylesRule extends InsertRule {
     // If there is a line-break in previous chunk, there should be no inline
     // styles. Also if there is no previous operation we are at the beginning
     // of the document so no styles to inherit from.
-    if (previous == null || previous.data.contains('\n')) return null;
+    if (previous == null || (previous.data as String).contains('\n'))
+      return null;
 
     final attributes = previous.attributes;
     final hasLink =
@@ -210,7 +212,8 @@ class AutoFormatLinksRule extends InsertRule {
     if (previous == null) return null;
 
     // Split text of previous operation in lines and words and take last word to test.
-    final candidate = previous.data.split('\n').last.split(' ').last;
+    final candidate =
+        (previous.data as String).split('\n').last.split(' ').last;
     try {
       final link = Uri.parse(candidate);
       if (!['https', 'http'].contains(link.scheme)) {
@@ -246,7 +249,8 @@ class ForceNewlineForInsertsAroundEmbedRule extends InsertRule {
     final iter = DeltaIterator(document);
     final previous = iter.skip(index);
     final target = iter.next();
-    final beforeEmbed = target.data == EmbedNode.kPlainTextPlaceholder;
+    final beforeEmbed =
+        (target.data as String) == EmbedNode.kPlainTextPlaceholder;
     final afterEmbed = previous?.data == EmbedNode.kPlainTextPlaceholder;
     if (beforeEmbed || afterEmbed) {
       final delta = Delta()..retain(index);
@@ -269,7 +273,8 @@ class PreserveBlockStyleOnPasteRule extends InsertRule {
 
   bool isEdgeLineSplit(Operation before, Operation after) {
     if (before == null) return true; // split at the beginning of a doc
-    return before.data.endsWith('\n') || after.data.startsWith('\n');
+    return (before.data as String).endsWith('\n') ||
+        (after.data as String).startsWith('\n');
   }
 
   @override
@@ -287,7 +292,7 @@ class PreserveBlockStyleOnPasteRule extends InsertRule {
     Map<String, dynamic> lineStyle;
     while (iter.hasNext) {
       final op = iter.next();
-      final lf = op.data.indexOf('\n');
+      final lf = (op.data as String).indexOf('\n');
       if (lf >= 0) {
         lineStyle = op.attributes;
         break;
