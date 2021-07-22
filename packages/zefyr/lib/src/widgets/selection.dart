@@ -42,7 +42,8 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
 
   TextSelectionControls get controls => _controls;
 
-  final ClipboardStatusNotifier _clipboardStatus = ClipboardStatusNotifier();
+  final ClipboardStatusNotifier _clipboardStatus =
+      kIsWeb ? null : ClipboardStatusNotifier();
 
   OverlayState _overlay;
   OverlayEntry _toolbar;
