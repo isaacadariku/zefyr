@@ -68,6 +68,7 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
   }
 
   void showToolbar() {
+    if (kIsWeb) return;
     final toolbarOpacity = _toolbarController.view;
     _toolbar = OverlayEntry(
       builder: (context) => FadeTransition(
