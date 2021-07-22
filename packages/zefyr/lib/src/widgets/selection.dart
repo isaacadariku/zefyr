@@ -42,8 +42,7 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
 
   TextSelectionControls get controls => _controls;
 
-  final ClipboardStatusNotifier _clipboardStatus =
-      kIsWeb ? null : ClipboardStatusNotifier();
+  final ClipboardStatusNotifier _clipboardStatus = ClipboardStatusNotifier();
 
   OverlayState _overlay;
   OverlayEntry _toolbar;
@@ -313,6 +312,7 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
     TextEditingValue value,
     SelectionChangedCause cause,
   ) {
+    print('[selection.dart] userUpdateTextEditingValue($value, $cause)');
     textEditingValue = value;
   }
 }
