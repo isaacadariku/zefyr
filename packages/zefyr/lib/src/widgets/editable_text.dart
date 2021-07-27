@@ -195,13 +195,13 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
       _onBackspace(forward: true);
     }
     if (event.logicalKey == LogicalKeyboardKey.backspace) {
-      print(event);
+      // print(event);
       _onBackspace();
     }
   }
 
   void _onBackspace({bool forward = false}) {
-    print('Backspace detected!');
+    // print('Backspace detected!');
     final text = _input.currentTextEditingValue.text;
     assert(selection != null);
     // if (_readOnly || !selection.isValid) {

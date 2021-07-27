@@ -127,7 +127,7 @@ class InputConnectionController implements TextInputClient {
 
   @override
   void updateEditingValue(TextEditingValue value) {
-    print('updateEditingValue: $value');
+    // print('updateEditingValue: $value');
     if (_sentRemoteValues.contains(value)) {
       /// There is a race condition in Flutter text input plugin where sending
       /// updates to native side too often results in broken behavior.
