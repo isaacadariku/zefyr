@@ -1,10 +1,13 @@
 // Copyright (c) 2018, the Zefyr project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notus/notus.dart';
 
@@ -175,6 +178,64 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
     );
   }
 
+  void _onFocusChanged() {
+    if (_focusNode.hasFocus == _hasFocus) return;
+    _hasFocus = _focusNode.hasFocus;
+    if (_focusNode.hasFocus) {
+      RawKeyboard.instance.addListener(_onKeyEvent);
+    } else {
+      RawKeyboard.instance.removeListener(_onKeyEvent);
+    }
+  }
+
+  void _onKeyEvent(RawKeyEvent event) {
+    if (kIsWeb) return;
+    if (event is! RawKeyDownEvent) return;
+    if (event.logicalKey == LogicalKeyboardKey.delete) {
+      _onBackspace(forward: true);
+    }
+    if (event.logicalKey == LogicalKeyboardKey.backspace) {
+      print(event);
+      _onBackspace();
+    }
+  }
+
+  void _onBackspace({bool forward = false}) {
+    print('Backspace detected!');
+    final text = _input.currentTextEditingValue.text;
+    assert(selection != null);
+    // if (_readOnly || !selection.isValid) {
+    // return;
+    // }
+    var textBefore = selection.textBefore(text);
+    var textAfter = selection.textAfter(text);
+    var cursorPosition = math.min(selection.start, selection.end);
+    // If not deleting a selection, delete the next/previous character.
+    if (selection.isCollapsed) {
+      if (!forward && textBefore.isNotEmpty) {
+        // ignore: omit_local_variable_types
+        final int characterBoundary =
+            // ignore: invalid_use_of_visible_for_testing_member
+            RenderEditable.previousCharacter(textBefore.length, textBefore);
+        textBefore = textBefore.substring(0, characterBoundary);
+        cursorPosition = characterBoundary;
+      }
+      if (forward && textAfter.isNotEmpty) {
+        // ignore: omit_local_variable_types
+        // ignore: invalid_use_of_visible_for_testing_member
+        final deleteCount = RenderEditable.nextCharacter(0, textAfter);
+        textAfter = textAfter.substring(deleteCount);
+      }
+    }
+    final newSelection = TextSelection.collapsed(offset: cursorPosition);
+    final value = TextEditingValue(
+      text: textBefore + textAfter,
+      selection: newSelection,
+    );
+    _input.updateEditingValue(value);
+    _input.updateRemoteValue(value, alwaysUpdateRemote: true);
+  }
+
   @override
   void initState() {
     _focusNode = widget.focusNode;
@@ -183,6 +244,7 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
     _input = InputConnectionController(_handleRemoteValueChange);
     _scrollController.addListener(_handleScrollChange);
     _updateSubscriptions();
+    _focusNode.addListener(_onFocusChanged);
   }
 
   @override
@@ -220,6 +282,7 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
     _cancelSubscriptions();
     _scrollController.removeListener(_handleScrollChange);
     _scrollController.dispose();
+    _focusNode.removeListener(_onFocusChanged);
     super.dispose();
   }
 
@@ -238,6 +301,7 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
   CursorTimer _cursorTimer;
   InputConnectionController _input;
   bool _didAutoFocus = false;
+  bool _hasFocus = false;
 
   List<Widget> _buildChildren(BuildContext context) {
     final result = <Widget>[];

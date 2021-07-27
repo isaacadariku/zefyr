@@ -314,7 +314,7 @@ class ZefyrSelectionOverlayState extends State<ZefyrSelectionOverlay>
     TextEditingValue value,
     SelectionChangedCause cause,
   ) {
-    print('[selection.dart] userUpdateTextEditingValue($value, $cause)');
+    // print('[selection.dart] userUpdateTextEditingValue($value, $cause)');
     textEditingValue = value;
   }
 }

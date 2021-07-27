@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:zefyr/util.dart';
 
-typedef RemoteValueChanged = Function(
+typedef RemoteValueChanged = void Function(
   int start,
   String deleted,
   String inserted,
@@ -28,8 +28,11 @@ class InputConnectionController implements TextInputClient {
 
   /// Opens or closes input connection based on the current state of
   /// [focusNode] and [value].
-  void openOrCloseConnection(FocusNode focusNode, TextEditingValue value,
-      Brightness keyboardAppearance) {
+  void openOrCloseConnection(
+    FocusNode focusNode,
+    TextEditingValue value,
+    Brightness keyboardAppearance,
+  ) {
     if (focusNode.hasFocus && focusNode.consumeKeyboardToken()) {
       openConnection(value, keyboardAppearance);
     } else if (!focusNode.hasFocus) {
@@ -79,7 +82,8 @@ class InputConnectionController implements TextInputClient {
   ///
   /// This method may not actually send an update to native side if it thinks
   /// remote value is up to date or identical.
-  void updateRemoteValue(TextEditingValue value) {
+  void updateRemoteValue(TextEditingValue value,
+      {bool alwaysUpdateRemote = false}) {
     if (!hasConnection) return;
 
     // Since we don't keep track of composing range in value provided by
@@ -91,7 +95,10 @@ class InputConnectionController implements TextInputClient {
       composing: _lastKnownRemoteTextEditingValue.composing,
     );
 
-    if (actualValue == _lastKnownRemoteTextEditingValue) return;
+    if (!alwaysUpdateRemote &&
+        actualValue == _lastKnownRemoteTextEditingValue) {
+      return;
+    }
 
     final shouldRemember = value.text != _lastKnownRemoteTextEditingValue.text;
     _lastKnownRemoteTextEditingValue = actualValue;
@@ -108,6 +115,7 @@ class InputConnectionController implements TextInputClient {
 
   @override
   void performAction(TextInputAction action) {
+    // The only TextInputAction we support is adding a new line
     final val = _lastKnownRemoteTextEditingValue;
     onValueChanged(
       val.selection.start,
@@ -119,6 +127,7 @@ class InputConnectionController implements TextInputClient {
 
   @override
   void updateEditingValue(TextEditingValue value) {
+    print('updateEditingValue: $value');
     if (_sentRemoteValues.contains(value)) {
       /// There is a race condition in Flutter text input plugin where sending
       /// updates to native side too often results in broken behavior.
@@ -185,6 +194,7 @@ class InputConnectionController implements TextInputClient {
     // TODO: implement updateFloatingCursor
   }
 
+  // LGTM
   @override
   void connectionClosed() {
     if (hasConnection) {
