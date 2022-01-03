@@ -201,8 +201,8 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
   }
 
   void _onBackspace({bool forward = false}) {
-    // print('Backspace detected!');
-    final text = _input.currentTextEditingValue.text;
+    final text = _input.currentTextEditingValue?.text;
+    if (text == null) return;
     assert(selection != null);
     // if (_readOnly || !selection.isValid) {
     // return;
