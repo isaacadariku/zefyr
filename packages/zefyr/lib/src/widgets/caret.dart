@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// Helper class responsible for cursor layout and painting.
 class CursorPainter {
   static const double _kCaretHeightOffset = 2.0; // pixels
-  static const double _kCaretWidth = 1.0; // pixels
+  static const double _kCaretWidth = 2.0; // pixels
 
   static Rect buildPrototype(double lineHeight) {
     return Rect.fromLTWH(
