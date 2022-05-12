@@ -832,11 +832,12 @@ class RawEditorState extends EditorState
         case TargetPlatform.fuchsia:
         case TargetPlatform.linux:
         case TargetPlatform.windows:
-        // Collapse the selection and hide the toolbar and handles.
+          // Collapse the selection and hide the toolbar and handles.
           userUpdateTextEditingValue(
             TextEditingValue(
               text: textEditingValue.text,
-              selection: TextSelection.collapsed(offset: textEditingValue.selection.end),
+              selection: TextSelection.collapsed(
+                  offset: textEditingValue.selection.end),
             ),
             SelectionChangedCause.toolbar,
           );
@@ -883,7 +884,8 @@ class RawEditorState extends EditorState
       return;
     }
 
-    _replaceText(ReplaceTextIntent(textEditingValue, data.text!, selection, cause));
+    _replaceText(
+        ReplaceTextIntent(textEditingValue, data.text!, selection, cause));
     if (cause == SelectionChangedCause.toolbar) {
       bringIntoView(textEditingValue.selection.extent);
       hideToolbar();
@@ -895,7 +897,8 @@ class RawEditorState extends EditorState
   void selectAll(SelectionChangedCause cause) {
     userUpdateTextEditingValue(
       textEditingValue.copyWith(
-        selection: TextSelection(baseOffset: 0, extentOffset: textEditingValue.text.length),
+        selection: TextSelection(
+            baseOffset: 0, extentOffset: textEditingValue.text.length),
       ),
       cause,
     );
@@ -1501,6 +1504,16 @@ class RawEditorState extends EditorState
     PasteTextIntent: _makeOverridable(CallbackAction<PasteTextIntent>(
         onInvoke: (PasteTextIntent intent) => pasteText(intent.cause))),
   };
+
+  @override
+  void insertTextPlaceholder(Size size) {
+    // TODO: implement insertTextPlaceholder
+  }
+
+  @override
+  void removeTextPlaceholder() {
+    // TODO: implement removeTextPlaceholder
+  }
 }
 
 class _Editor extends MultiChildRenderObjectWidget {

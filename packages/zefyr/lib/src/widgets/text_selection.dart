@@ -367,9 +367,11 @@ class EditorTextSelectionOverlay {
         textPosition = newSelection.extent;
         break;
     }
-    // TODO: update to use userUpdateTextEditingValue
-    selectionDelegate!.textEditingValue =
+    final value =
         _value.copyWith(selection: newSelection, composing: TextRange.empty);
+    // TODO use correct SelectionChangedCause
+    selectionDelegate!
+        .userUpdateTextEditingValue(value, SelectionChangedCause.keyboard);
     selectionDelegate!.bringIntoView(textPosition);
   }
 }
