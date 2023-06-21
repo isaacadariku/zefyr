@@ -428,6 +428,7 @@ class _ZefyrEditorSelectionGestureDetectorBuilder
               }
               break;
             case PointerDeviceKind.touch:
+            case PointerDeviceKind.trackpad:
             case PointerDeviceKind.unknown:
               // On macOS/iOS/iPadOS a touch tap places the cursor at the edge
               // of the word.
@@ -1174,7 +1175,7 @@ class RawEditorState extends EditorState
         return;
       }
 
-      final viewport = RenderAbstractViewport.of(renderEditor)!;
+      final viewport = RenderAbstractViewport.of(renderEditor);
       final editorOffset = renderEditor.localToGlobal(const Offset(0.0, 0.0),
           ancestor: viewport);
       final offsetInViewport = _scrollController.offset + editorOffset.dy;
@@ -1511,6 +1512,17 @@ class RawEditorState extends EditorState
   void removeTextPlaceholder() {
     // TODO: implement removeTextPlaceholder
   }
+
+  @override
+  void didChangeInputControl(
+      TextInputControl? oldControl, TextInputControl? newControl) {
+    // TODO: implement didChangeInputControl
+  }
+
+  @override
+  void performSelector(String selectorName) {
+    // TODO: implement performSelector
+  }
 }
 
 class _Editor extends MultiChildRenderObjectWidget {
@@ -1574,7 +1586,6 @@ class _Editor extends MultiChildRenderObjectWidget {
     renderObject.padding = padding;
     renderObject.maxContentWidth = maxContentWidth;
   }
-
 }
 
 /// An interface for retriving the logical text boundary (left-closed-right-open)
