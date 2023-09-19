@@ -16,25 +16,25 @@ class DemoScaffold extends StatefulWidget {
   final String documentFilename;
   final DemoContentBuilder builder;
   final List<Widget> actions;
-  final Widget floatingActionButton;
+  final Widget? floatingActionButton;
   final bool showToolbar;
 
   const DemoScaffold({
-    Key key,
-    @required this.documentFilename,
-    @required this.builder,
-    this.actions,
+    Key? key,
+    required this.documentFilename,
+    required this.builder,
+    this.actions = const [],
     this.showToolbar = true,
     this.floatingActionButton,
   }) : super(key: key);
 
   @override
-  _DemoScaffoldState createState() => _DemoScaffoldState();
+  DemoScaffoldState createState() => DemoScaffoldState();
 }
 
-class _DemoScaffoldState extends State<DemoScaffold> {
+class DemoScaffoldState extends State<DemoScaffold> {
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-  ZefyrController _controller;
+  late ZefyrController _controller;
 
   bool _loading = false;
   bool _canSave = false;
@@ -42,7 +42,7 @@ class _DemoScaffoldState extends State<DemoScaffold> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_controller == null && !_loading) {
+    if (!_loading) {
       _loading = true;
       final settings = Settings.of(context);
       if (settings.assetsPath.isEmpty) {
@@ -55,7 +55,7 @@ class _DemoScaffoldState extends State<DemoScaffold> {
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -106,12 +106,12 @@ class _DemoScaffoldState extends State<DemoScaffold> {
     final data = jsonEncode(_controller.document);
     await file.writeAsString(data);
     _scaffoldMessengerKey.currentState
-        .showSnackBar(const SnackBar(content: Text('Saved.')));
+        ?.showSnackBar(const SnackBar(content: Text('Saved.')));
   }
 
   @override
   Widget build(BuildContext context) {
-    final actions = widget.actions ?? <Widget>[];
+    final actions = widget.actions;
     if (_canSave) {
       actions.add(IconButton(
         onPressed: _save,

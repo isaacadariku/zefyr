@@ -1523,10 +1523,19 @@ class RawEditorState extends EditorState
   void performSelector(String selectorName) {
     // TODO: implement performSelector
   }
+
+  @override
+  void insertContent(KeyboardInsertedContent content) {
+    // TODO: implement insertContent
+  }
+
+  @override
+  // TODO: implement liveTextInputEnabled
+  bool get liveTextInputEnabled => false;
 }
 
 class _Editor extends MultiChildRenderObjectWidget {
-  _Editor({
+  const _Editor({
     required Key key,
     required List<Widget> children,
     this.offset,

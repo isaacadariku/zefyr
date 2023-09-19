@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:example/src/read_only_view.dart';
+import 'package:example/src/url_launcher_util.dart';
 import 'package:file/local.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:zefyr/zefyr.dart';
 
 import 'forms_decorated_field.dart';
@@ -15,17 +15,16 @@ import 'layout_scrollable.dart';
 import 'settings.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  ZefyrController _controller;
-  final FocusNode _focusNode = FocusNode();
-
-  Settings _settings;
+  late ZefyrController _controller;
+  late FocusNode _focusNode;
+  late Settings _settings;
 
   void _handleSettingsLoaded(Settings value) {
     setState(() {
@@ -37,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _focusNode = FocusNode();
     Settings.load().then(_handleSettingsLoaded);
   }
 
@@ -64,10 +64,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_settings == null || _controller == null) {
-      return const Scaffold(body: Center(child: Text('Loading...')));
-    }
-
     return SettingsProvider(
       settings: _settings,
       child: PageLayout(
@@ -102,7 +98,7 @@ class _HomePageState extends State<HomePage> {
 
   void _showSettings() async {
     final result = await showSettingsDialog(context, _settings);
-    if (mounted && result != null) {
+    if (mounted) {
       setState(() {
         _settings = result;
       });
@@ -173,20 +169,13 @@ class _HomePageState extends State<HomePage> {
               autofocus: true,
               // readOnly: true,
               // padding: EdgeInsets.only(left: 16, right: 16),
-              onLaunchUrl: _launchUrl,
+              onLaunchUrl: openUrl,
               maxContentWidth: 800,
             ),
           ),
         ),
       ],
     );
-  }
-
-  void _launchUrl(String url) async {
-    final result = await canLaunch(url);
-    if (result) {
-      await launch(url);
-    }
   }
 
   void _expanded() {

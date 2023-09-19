@@ -418,6 +418,7 @@ class _TextSelectionHandleOverlay extends StatefulWidget {
 class _TextSelectionHandleOverlayState
     extends State<_TextSelectionHandleOverlay>
     with SingleTickerProviderStateMixin {
+  // ignore: unused_field
   late Offset _dragPosition;
 
   late AnimationController _controller;
@@ -927,6 +928,9 @@ class EditorTextSelectionGestureDetectorBuilder {
     );
   }
 }
+
+typedef DragSelectionUpdateCallback = void Function(
+    DragStartDetails startDetails, DragUpdateDetails updateDetails);
 
 /// A gesture detector to respond to non-exclusive event chains for a text field.
 ///

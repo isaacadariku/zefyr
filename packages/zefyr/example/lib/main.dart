@@ -10,7 +10,7 @@ void main() {
 }
 
 class ZefyrApp extends StatelessWidget {
-  const ZefyrApp({Key key}) : super(key: key);
+  const ZefyrApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
